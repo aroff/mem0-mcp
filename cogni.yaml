@@ -19,4 +19,5 @@ env:
     type: string
     description: Mem0 API Key
     required: True
-
+probes:
+  disableHealthCheck: true 
