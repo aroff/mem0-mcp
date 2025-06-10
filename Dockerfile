@@ -4,7 +4,11 @@ WORKDIR /app
 # Copy from the nested directory structure
 COPY node/mem0/package.json node/mem0/pnpm-lock.yaml node/mem0/tsconfig.json node/mem0/tsup.config.ts ./
 COPY node/mem0/src ./src
-RUN npm install --ignore-scripts && npm run build
+#RUN npm install --ignore-scripts && npm run build
+
+RUN npm install --ignore-scripts
+RUN npx tsup src/index.ts --format cjs --clean --no-dts
+
 
 # Runtime stage
 FROM node:lts-alpine
