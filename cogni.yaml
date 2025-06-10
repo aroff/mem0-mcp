@@ -13,3 +13,10 @@ resources:
 scaling:
   minScale: 1
   maxScale: 2
+
+env:
+  MEM0_API_KEY:
+    type: string
+    description: Mem0 API Key
+    required: True
+
