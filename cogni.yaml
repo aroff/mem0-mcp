@@ -8,7 +8,7 @@ metadata:
   
 resources:
   cpu: "100m"
-  memory: "128Mi"
+  memory: "512Mi"
   
 scaling:
   minScale: 1
