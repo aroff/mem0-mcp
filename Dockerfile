@@ -3,13 +3,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Install curl for downloading uv
-RUN apt-get update && apt-get install -y curl && \
-    rm -rf /var/lib/apt/lists/*
-
-# Install uv
-RUN curl -sSf https://astral.sh/uv/install.sh | sh
-
+# Install uv and add it to PATH
+RUN curl -sSf https://astral.sh/uv/install.sh | sh && \
+    echo 'export PATH="/root/.cargo/bin:$PATH"' >> ~/.bashrc && \
+    . ~/.bashrc
+    
 # Add uv to the PATH
 ENV PATH="/root/.cargo/bin:${PATH}"
 
