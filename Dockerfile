@@ -1,10 +1,9 @@
-# Builder stage
 FROM node:lts-alpine AS builder
 WORKDIR /app
 
-# Install dependencies and build
-COPY package.json pnpm-lock.yaml tsconfig.json tsup.config.ts ./
-COPY src ./src
+# Copy from the nested directory structure
+COPY node/mem0/package.json node/mem0/pnpm-lock.yaml node/mem0/tsconfig.json node/mem0/tsup.config.ts ./
+COPY node/mem0/src ./src
 RUN npm install --ignore-scripts && npm run build
 
 # Runtime stage
