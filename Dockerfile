@@ -1,26 +1,17 @@
-FROM node:lts-alpine AS builder
+# Build image for deploying in Cogni+ Platform
+FROM python:3.11-slim
+
 WORKDIR /app
 
-# Copy from the nested directory structure
-COPY node/mem0/package.json node/mem0/pnpm-lock.yaml node/mem0/tsconfig.json node/mem0/tsup.config.ts ./
-COPY node/mem0/src ./src
-#RUN npm install --ignore-scripts && npm run build
+# Copy source files
+COPY . .
 
-RUN npm install --ignore-scripts
-RUN npx tsup src/index.ts --format cjs --clean --no-dts
-
-
-# Runtime stage
-FROM node:lts-alpine
-WORKDIR /app
-
-# Copy built artifacts and production dependencies
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/node_modules ./node_modules
+RUN uv venv
+RUN source .venv/bin/activate
+RUN uv pip install -e .
 
 # Use non-root user
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-USER appuser
+# RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# USER appuser
 
-# Default command
-CMD ["node", "dist/index.js"]
+CMD ["uv", "run", "main.py", "-t", "sse"]
