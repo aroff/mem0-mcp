@@ -1,39 +1,26 @@
-# Builder stage
 FROM node:lts-alpine AS builder
 WORKDIR /app
 
-# Copy the entire node/mem0 directory to maintain project structure
-COPY node/mem0 ./
+# Copy from the nested directory structure
+COPY node/mem0/package.json node/mem0/pnpm-lock.yaml node/mem0/tsconfig.json node/mem0/tsup.config.ts ./
+COPY node/mem0/src ./src
+#RUN npm install --ignore-scripts && npm run build
 
-# Debug - check file structure
-RUN ls -la
+RUN npm install --ignore-scripts
+RUN npx tsup src/index.ts --format cjs --clean --no-dts
 
-# Install dependencies 
-RUN npm install
-
-# Show package.json scripts to understand the build process
-RUN cat package.json | grep -A 10 scripts
-
-# Build with more verbose output
-RUN npm run build
-
-# Debug - check output location
-RUN find /app -name "*.js" | sort
 
 # Runtime stage
 FROM node:lts-alpine
 WORKDIR /app
 
-# Copy everything from builder stage for now
-COPY --from=builder /app ./
-
-# Debug in runtime image
-RUN ls -la dist || echo "dist directory not found" && \
-    find /app -name "*.js" | grep -v "node_modules" | sort
+# Copy built artifacts and production dependencies
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
 
 # Use non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
-# Start with explicit node command for better error messages
-CMD ["sh", "-c", "ls -la && find /app -name \"*.js\" | grep -v \"node_modules\" && node dist/index.js"]
+# Default command
+CMD ["node", "dist/index.js"]
