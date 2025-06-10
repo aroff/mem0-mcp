@@ -25,4 +25,4 @@ RUN uv pip install fastapi
 # RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # USER appuser
 
-CMD ["uv", "run", "main.py", "-t", "sse"]
+CMD ["uv", "run", "python", "main.py", "-t", "sse"]
