@@ -14,10 +14,13 @@ scaling:
   minScale: 1
   maxScale: 2
 
-env:
+secrets:
   MEM0_API_KEY:
     type: string
     description: Mem0 API Key
     required: True
+    source: cogni
+    permission: per_instance
+
 probes:
   disableHealthCheck: true 
