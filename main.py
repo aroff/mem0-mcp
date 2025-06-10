@@ -5,6 +5,8 @@ from starlette.requests import Request
 from starlette.routing import Mount, Route
 from mcp.server import Server
 import uvicorn
+from fastapi.responses import JSONResponse, HTMLResponse
+
 from mem0 import MemoryClient
 from dotenv import load_dotenv
 import json
@@ -13,6 +15,16 @@ load_dotenv()
 
 # Initialize FastMCP server for mem0 tools
 mcp = FastMCP("mem0-mcp")
+
+@mcp.custom_route("/healthz", methods=["GET"])
+async def health_check(request):
+    return JSONResponse({"status": "ok"})
+
+
+@mcp.custom_route("/", methods=["GET"])
+async def home_dir(request):
+    # return a simple html page with a link to the sse endpoint
+    return HTMLResponse(content="<h1>Hello , I'm MEM0 MCP</h1>")
 
 # Initialize mem0 client and set default user
 mem0_client = MemoryClient()
