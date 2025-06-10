@@ -19,7 +19,7 @@ ENV PATH="/root/.cargo/bin:/root/.local/bin:${PATH}"
 COPY . .
 
 RUN uv venv
-RUN . .venv/bin/activate && uv pip install -e .
+RUN uv pip install -e .
 RUN uv pip install fastapi
 # Use non-root user
 # RUN addgroup -S appgroup && adduser -S appuser -G appgroup
