@@ -18,12 +18,10 @@ ENV PATH="/root/.cargo/bin:/root/.local/bin:${PATH}"
 # Copy source files
 COPY . .
 
-RUN uv venv
-RUN uv pip install -e .
-RUN uv pip install fastapi
+RUN uv venv && \
+    uv pip install -e . && \
+    uv pip install fastapi
 # Use non-root user
 # RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # USER appuser
-
-#CMD ["uv", "run", "python", "main.py", "-t", "sse"]
 CMD ["uv", "run", "main.py", "-t", "sse"]
