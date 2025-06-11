@@ -24,4 +24,6 @@ RUN uv venv && \
 # Use non-root user
 # RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 # USER appuser
-CMD ["uv", "run", "main.py", "-t", "sse"]
+#CMD ["uv", "run", "main.py", "-t", "sse"]
+
+CMD ["uv", "run", "main.py"]
